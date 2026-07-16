@@ -1,0 +1,12 @@
+name = "vibe-attendance"
+compatibility_date = "2024-11-01"
+pages_build_output_dir = "public"
+
+# After creating the database with:
+#   wrangler d1 create vibe_attendance_db
+# paste the generated database_id below (also set it in the Pages dashboard
+# under Settings > Functions > D1 database bindings, variable name "DB").
+[[d1_databases]]
+binding = "DB"
+database_name = "vibe_attendance_db"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"

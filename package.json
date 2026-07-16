@@ -1,0 +1,16 @@
+{
+  "name": "vibe-attendance",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vibe: Virtual Attendance & Business Efficiency — Cloudflare Pages + D1 attendance app",
+  "scripts": {
+    "dev": "wrangler pages dev public --d1=DB",
+    "db:create": "wrangler d1 create vibe_attendance_db",
+    "db:migrate:local": "wrangler d1 execute vibe_attendance_db --local --file=./schema.sql",
+    "db:migrate:remote": "wrangler d1 execute vibe_attendance_db --remote --file=./schema.sql",
+    "deploy": "wrangler pages deploy public"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
+  }
+}
