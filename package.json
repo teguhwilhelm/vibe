@@ -2,7 +2,7 @@
   "name": "vibe-attendance",
   "version": "1.0.0",
   "private": true,
-  "description": "Vibe: Virtual Attendance & Business Efficiency — Cloudflare Pages + D1 attendance app",
+  "description": "Vibe: Virtual Attendance & Business Efficiency",
   "scripts": {
     "dev": "wrangler pages dev public --d1=DB",
     "db:create": "wrangler d1 create vibe_attendance_db",
@@ -11,6 +11,6 @@
     "deploy": "wrangler pages deploy public"
   },
   "devDependencies": {
-    "wrangler": "^3.90.0"
+    "wrangler": "^4"
   }
 }
