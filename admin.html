@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Vibe — Admin</title>
+<link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body>
+<div class="app-shell" id="shell">
+  <aside class="sidebar">
+    <div class="pulse-mark" id="sideMark"></div>
+    <div class="nav-group">
+      <a class="nav-link active" data-view="overview">📊 Overview</a>
+      <a class="nav-link" data-view="employees">👥 Employees</a>
+      <a class="nav-link" data-view="scheduling">🗓️ Shifts &amp; locations</a>
+      <a class="nav-link" data-view="attendance">🕒 Attendance</a>
+      <a class="nav-link" data-view="leave">🌴 Leave requests</a>
+      <a class="nav-link" data-view="reports">📈 Reports</a>
+    </div>
+    <div class="sidebar-foot">
+      <div class="who"><strong id="whoName">—</strong><span id="whoRole"></span></div>
+      <a class="nav-link" id="logoutBtn">↩ Sign out</a>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <button class="menu-btn" id="menuBtn">☰</button>
+        <h1 id="pageTitle">Overview</h1>
+        <div class="sub" id="pageSub">How the company is doing today.</div>
+      </div>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section id="view-overview">
+      <div class="grid grid-4" id="statCards"></div>
+      <div class="card" style="margin-top:16px;">
+        <h3>Attendance rate — last 7 days</h3>
+        <canvas id="trendChart" height="90"></canvas>
+      </div>
+    </section>
+
+    <!-- EMPLOYEES -->
+    <section id="view-employees" style="display:none;">
+      <div class="toolbar">
+        <div class="toolbar-spacer"></div>
+        <button class="btn btn-primary btn-sm" id="addEmployeeBtn">+ Add employee</button>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table id="employeeTable">
+            <thead><tr><th>Name</th><th>Code</th><th>Email</th><th>Role</th><th>Dept.</th><th>Status</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCHEDULING -->
+    <section id="view-scheduling" style="display:none;">
+      <div class="grid grid-2" style="align-items:start;">
+        <div class="card">
+          <div class="section-title"><h2>Shifts</h2><button class="btn btn-ghost btn-sm" id="addShiftBtn">+ Add shift</button></div>
+          <div class="table-wrap"><table id="shiftTable">
+            <thead><tr><th>Name</th><th>Time</th><th>Grace</th><th></th></tr></thead><tbody></tbody>
+          </table></div>
+        </div>
+        <div class="card">
+          <div class="section-title"><h2>Work locations</h2><button class="btn btn-ghost btn-sm" id="addLocationBtn">+ Add location</button></div>
+          <div class="table-wrap"><table id="locationTable">
+            <thead><tr><th>Name</th><th>Radius</th><th></th></tr></thead><tbody></tbody>
+          </table></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <h3>Assign a rotating shift pattern</h3>
+        <div class="sub" style="margin-bottom:14px;">The employee automatically rotates through the chosen shifts, switching every N days.</div>
+        <form id="rotationForm">
+          <div class="field-row">
+            <div class="field"><label>Employee</label><select id="rotEmployee" required></select></div>
+            <div class="field"><label>Rotate every (days)</label><input type="number" id="rotInterval" value="7" min="1" required /></div>
+          </div>
+          <div class="field">
+            <label>Shift order (select in rotation order)</label>
+            <select id="rotShifts" multiple size="4" required></select>
+            <div class="hint">Cmd/Ctrl-click to select multiple shifts, in the order they should rotate.</div>
+          </div>
+          <div class="field"><label>Rotation starts</label><input type="date" id="rotStart" required /></div>
+          <button class="btn btn-primary" type="submit" style="width:auto;">Save rotation</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ATTENDANCE -->
+    <section id="view-attendance" style="display:none;">
+      <div class="toolbar">
+        <div class="tabs-row" id="attScopeTabs">
+          <button data-scope="day" class="active">Day</button>
+          <button data-scope="week">Week</button>
+          <button data-scope="month">Month</button>
+        </div>
+        <div class="field"><input type="date" id="attDate" /></div>
+        <div class="field"><select id="attEmployee"><option value="">All employees</option></select></div>
+        <div class="toolbar-spacer"></div>
+        <button class="btn btn-ghost btn-sm" id="attExportExcel">⬇ Excel</button>
+        <button class="btn btn-ghost btn-sm" id="attExportPdf">⬇ PDF</button>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table id="attendanceTable">
+            <thead><tr><th>Employee</th><th>Date</th><th>Shift</th><th>Clock in</th><th>Clock out</th><th>Status</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEAVE -->
+    <section id="view-leave" style="display:none;">
+      <div class="toolbar">
+        <div class="tabs-row" id="leaveStatusTabs">
+          <button data-status="pending" class="active">Pending</button>
+          <button data-status="approved">Approved</button>
+          <button data-status="rejected">Rejected</button>
+          <button data-status="">All</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table id="leaveTable">
+            <thead><tr><th>Employee</th><th>Type</th><th>Dates</th><th>Reason</th><th>Status</th><th></th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORTS -->
+    <section id="view-reports" style="display:none;">
+      <div class="toolbar">
+        <div class="field"><label style="display:block;font-size:11px;">From</label><input type="date" id="repFrom" /></div>
+        <div class="field"><label style="display:block;font-size:11px;">To</label><input type="date" id="repTo" /></div>
+        <button class="btn btn-ghost btn-sm" id="repRun">Run report</button>
+        <div class="toolbar-spacer"></div>
+        <button class="btn btn-ghost btn-sm" id="repExportExcel">⬇ Excel</button>
+        <button class="btn btn-ghost btn-sm" id="repExportPdf">⬇ PDF</button>
+      </div>
+      <div class="grid grid-3" style="margin-bottom:16px;">
+        <div class="card"><h3>Company attendance rate</h3><canvas id="rateChart" height="140"></canvas></div>
+        <div class="card" style="grid-column: span 2;"><h3>Lateness &amp; absence by employee</h3><canvas id="lateAbsChart" height="140"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table id="reportTable">
+            <thead><tr><th>Employee</th><th>Present</th><th>Late</th><th>Absent</th><th>Leave</th><th>Rate</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div id="modalSlot"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script src="/js/api.js"></script>
+<script src="/js/admin.js"></script>
+</body>
+</html>
